@@ -1,4 +1,15 @@
 #!/bin/sh
+set -e
+
+if [ "$(id -u)" = '0' ]; then
+  groupmod -o -g ${PGID} factorio
+  usermod -o -u ${PUID} factorio
+  mkdir -p /config
+  chown -hR factorio:factorio /config
+  chown -hR factorio:factorio /clusterio
+  su-exec factorio:factorio sh /init.sh "$@"
+  exit 0
+fi
 
 case $MODE in
   "init")
