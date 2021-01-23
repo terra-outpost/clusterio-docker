@@ -3,6 +3,7 @@ version: '3'
 services:
   master:
     build: .
+    image: liamcottam/clusterio:latest
     container_name: factorio-master
     command: npx clusteriomaster run
     volumes:
@@ -12,12 +13,14 @@ services:
     networks:
       - internal
   cluster:
-    build: .
+    image: liamcottam/clusterio:latest
+    depends_on:
+      - master
     container_name: factorio-cluster
     command: npx clusterioslave run
     volumes:
     - clusterio_config:/config
-    - instace_storage:/clusterio/instances
+    - instance_storage:/clusterio/instances
     ports:
       - 34197:34197/udp
       - 34198:34198/udp
@@ -29,4 +32,4 @@ networks:
 
 volumes:
   clusterio_config:
-  instace_storage:
+  instance_storage:
