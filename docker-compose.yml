@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  master:
+    build: .
+    container_name: factorio-master
+    command: npx clusteriomaster run
+    volumes:
+      - clusterio_config:/config
+    ports:
+      - 1234:1234
+    networks:
+      - internal
+  cluster:
+    build: .
+    container_name: factorio-cluster
+    command: npx clusterioslave run
+    volumes:
+    - clusterio_config:/config
+    - instace_storage:/clusterio/instances
+    ports:
+      - 34197:34197/udp
+      - 34198:34198/udp
+    networks:
+      - internal
+
+networks:
+  internal:
+
+volumes:
+  clusterio_config:
+  instace_storage:
